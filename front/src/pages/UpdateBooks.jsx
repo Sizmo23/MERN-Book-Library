@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import Spinner from "../Components/Spinner";
 import axios from "axios";
 import { useNavigate, useParams } from "react-router-dom";
+import {useSnackbar} from 'notistack';
 
 const UpdateBooks = () => {
   const [title, settitle] = useState("");
@@ -10,6 +11,7 @@ const UpdateBooks = () => {
   const [loading, setloading] = useState(false);
   const navigate = useNavigate();
   const {id} = useParams();
+  const {enqueueSnackbar} = useSnackbar();
 
   useEffect(() =>{
     setloading(true);
@@ -39,11 +41,12 @@ const UpdateBooks = () => {
       .put(`http://localhost:5555/books/${id}`, data)
       .then(() => {
         setloading(false);
+        enqueueSnackbar(`Book ${data.title} Updated successfully!`, {variant: 'success'});
         navigate("/");
       })
       .catch((err) => {
         setloading(false);
-        alert(`Unfortunately an error has occured! ${err}`);
+        enqueueSnackbar(`Unfortunately an error has occured! ${err}`, {variant: 'error'});
         console.log(err);
       });
   };
